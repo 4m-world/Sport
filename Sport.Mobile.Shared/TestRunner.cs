@@ -117,12 +117,12 @@ namespace Sport.Mobile.Shared
 			try {
 				var runTestTask = RunTest (cancellationToken, secondToken.Token);
 				var finishedTask = await Task.WhenAny (runTestTask, timeoutTask);
-				secondToken.Cancel ();
 				if (success && finishedTask == runTestTask)
 					success = runTestTask.Result;
 				Debug.WriteLine ("Finished");
 				cancellationToken.ThrowIfCancellationRequested ();
 				secondToken.Token.ThrowIfCancellationRequested ();
+				secondToken.Cancel ();
 				if (testRunId != CurrentTestRunId) {
 					Debug.WriteLine ($"Test should have canceled: {testRunId}");
 					return;

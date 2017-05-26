@@ -23,28 +23,41 @@ namespace Sport.Mobile.Shared
 		{
 			MessagingCenter.Unsubscribe<App>(this, Messages.ChallengesUpdated);
 		}
-
+		public ListView List => list;
 		async protected override void Initialize()
 		{
 			InitializeComponent();
 			Title = "Leaderboard";
 
-			list.ItemSelected += async(sender, e) =>
-			{
-				if(list.SelectedItem == null)
-					return;
-
-				var vm = list.SelectedItem as MembershipViewModel;
-				list.SelectedItem = null;
-				var page = new MembershipDetailsPage(vm.Membership);
-					
-				await Navigation.PushAsync(page);
-			};
 
 			SubscribeToChallenges();
 
 			if(ViewModel.League != null)
 				await ViewModel.LocalRefresh();
+		}
+
+		async void OnItemSelected (object sender, EventArgs e)
+		{
+			if (list.SelectedItem == null)
+				return;
+
+			var vm = list.SelectedItem as MembershipViewModel;
+			list.SelectedItem = null;
+			var page = new MembershipDetailsPage (vm.Membership);
+
+			await Navigation.PushAsync (page);
+		}
+
+		protected override void OnAppearing ()
+		{
+			list.ItemSelected += OnItemSelected;
+			base.OnAppearing ();
+		}
+
+		protected override void OnDisappearing ()
+		{
+			list.ItemSelected -= OnItemSelected;
+			base.OnDisappearing ();
 		}
 
 		protected override void TrackPage(Dictionary<string, string> metadata)

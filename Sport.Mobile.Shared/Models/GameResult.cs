@@ -11,14 +11,7 @@ namespace Sport.Mobile.Shared
 		{
 			get
 			{
-				if(_league == null)
-				{
-					Task.Run(async () => {
-						_league = await AzureService.Instance.ChallengeManager.Table.LookupAsync(ChallengeId);
-					}).Wait();
-				}
-
-				return _league;
+				return _league ?? (_league = AzureService.Instance.ChallengeManager.GetItem (ChallengeId));
 			}
 		}
 

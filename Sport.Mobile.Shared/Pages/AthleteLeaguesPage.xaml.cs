@@ -19,7 +19,7 @@ namespace Sport.Mobile.Shared
 			ViewModel.Athlete = athlete;
 			Initialize();
 		}
-
+		public ListView List => list;
 		protected override void Initialize()
 		{
 			InitializeComponent();

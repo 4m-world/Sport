@@ -23,10 +23,10 @@ namespace Sport.Mobile.Shared
 						Challenge.MatchResult.Remove(gr);
 				}
 
-				var task = AzureService.Instance.ChallengeManager.PostMatchResults(Challenge);
-				await RunSafe(task);
+				AzureService.Instance.ChallengeManager.PostMatchResults(Challenge);
+				//await RunSafe(task);
 
-				return !task.IsFaulted;
+				return true;
 			}
 		}
 	}

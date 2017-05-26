@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Sport.Mobile.Shared.Services;
 
 namespace Sport.Mobile.Shared
 {
@@ -14,21 +15,9 @@ namespace Sport.Mobile.Shared
 			return new Task<DateTime?>(() => {
 				var qs = new Dictionary<string, string>();
 				qs.Add("id", id);
-				var dateTime = AzureService.Instance.Client.InvokeApiAsync("startLeague", null, HttpMethod.Post, qs).Result;
-				return (DateTime)dateTime.Root;
+				//var dateTime = AzureService.Instance.Client.InvokeApiAsync("startLeague", null, HttpMethod.Post, qs).Result;
+				return DateTime.Now;
 			});
-		}
-
-		async public override Task<League> GetItemAsync(string id, bool forceRefresh = false)
-		{
-			if(forceRefresh)
-			{
-				await AzureService.Instance.GameResultManager.PullLatestAsync().ConfigureAwait(false);
-				await AzureService.Instance.ChallengeManager.PullLatestAsync().ConfigureAwait(false);
-				await AzureService.Instance.MembershipManager.PullLatestAsync().ConfigureAwait(false);
-			}
-
-			return await base.GetItemAsync(id, forceRefresh);
 		}
 	}
 }

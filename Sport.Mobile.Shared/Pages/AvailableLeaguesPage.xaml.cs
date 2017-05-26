@@ -29,7 +29,7 @@ namespace Sport.Mobile.Shared
 
 			await ViewModel.GetAvailableLeagues();
 		}
-
+		public ListView List => list;
 		async void OnItemSelected(object sender, SelectedItemChangedEventArgs e)
 		{
 			if(list.SelectedItem == null)

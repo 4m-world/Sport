@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using System;
 using System.Linq;
-using Microsoft.WindowsAzure.MobileServices;
 using System.Runtime.CompilerServices;
 using System.Diagnostics;
 using System.Collections.ObjectModel;
@@ -91,7 +90,7 @@ namespace Sport.Mobile.Shared
 
 			using(new Busy(this))
 			{
-				await AzureService.Instance.LeagueManager.GetItemAsync(League.Id, true);
+				AzureService.Instance.LeagueManager.GetItem(League.Id, true);
 				await AzureService.Instance.ChallengeManager.PullLatestAsync();
 				await AzureService.Instance.AthleteManager.PullLatestAsync();
 

@@ -117,7 +117,7 @@ namespace Sport.Mobile.Shared
 					page.OnMatchResultsPosted = async () => {
 						_didPost = true;
 						ViewModel.NotifyPropertiesChanged();
-						challenge = await AzureService.Instance.ChallengeManager.GetItemAsync(arg.Challenge.Id);
+						challenge = AzureService.Instance.ChallengeManager.GetItem(arg.Challenge.Id);
 						PushChallengeDetailsPage(challenge, true);
 						rankStrip.Membership = ViewModel.CurrentMembership;
 					};
@@ -203,18 +203,10 @@ namespace Sport.Mobile.Shared
 
 			rankStrip.Membership = ViewModel.CurrentMembership; //Binding is not working in XAML for some reason
 
-			scrollView.Scrolled += (sender, e) => Parallax();
+
 			Parallax();
 
-			btnRefresh.Clicked += async (sender, e) =>
-			{
-				using (new HUD("Refreshing..."))
-				{
-					await ViewModel.RefreshLeague(true);
-					rankStrip.Membership = ViewModel.CurrentMembership;
-					UpdateChallenageCarousel();
-				}
-			};
+
 
 			rankStrip.OnAthleteClicked = async (membership) =>
 			{
@@ -227,9 +219,23 @@ namespace Sport.Mobile.Shared
 				HeapGloriousPraise();
 			}
 		}
+		async void refreshClicked (object sender, EventArgs e)
+		{
+			using (new HUD ("Refreshing...")) {
+				await ViewModel.RefreshLeague (true);
+				rankStrip.Membership = ViewModel.CurrentMembership;
+				UpdateChallenageCarousel ();
+			}
+		}
+		void OnScrolling (object sender, EventArgs e)
+		{
+			Parallax ();
+		}
 
 		protected override void OnAppearing()
 		{
+			scrollView.Scrolled += OnScrolling;
+			btnRefresh.Clicked += refreshClicked;
 			_didPost = false; //reset
 			UpdateMenuButtons();
 
@@ -238,6 +244,12 @@ namespace Sport.Mobile.Shared
 			rankStrip.Membership = ViewModel.CurrentMembership;
 
 			base.OnAppearing();
+		}
+		protected override void OnDisappearing ()
+		{
+			base.OnDisappearing ();
+			scrollView.Scrolled -= OnScrolling;
+			btnRefresh.Clicked -= refreshClicked;
 		}
 
 		void UpdateChallenageCarousel()
@@ -394,7 +406,7 @@ namespace Sport.Mobile.Shared
 			"This feature hasn't been implemented".ToToast();
 		}
 
-		async void OnRankings()
+		public async void OnRankings()
 		{
 			if(!ViewModel.League.HasStarted)
 			{

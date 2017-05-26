@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="..\packages\Xamarin.Build.Download.0.4.4\build\Xamarin.Build.Download.props" Condition="Exists('..\packages\Xamarin.Build.Download.0.4.4\build\Xamarin.Build.Download.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -31,15 +31,15 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
-    <EmbedAssembliesIntoApk>false</EmbedAssembliesIntoApk>
+    <EmbedAssembliesIntoApk>true</EmbedAssembliesIntoApk>
     <JavaMaximumHeapSize>1G</JavaMaximumHeapSize>
     <Debugger>Xamarin</Debugger>
     <AndroidSupportedAbis>arm64-v8a;armeabi;armeabi-v7a;x86;x86_64</AndroidSupportedAbis>
 <AndroidUseSharedRuntime>true</AndroidUseSharedRuntime>
 <AndroidHttpClientHandlerType>Xamarin.Android.Net.AndroidClientHandler</AndroidHttpClientHandlerType>
 <AndroidTlsProvider>btls</AndroidTlsProvider>
-<AndroidKeyStore>True</AndroidKeyStore>
-<AndroidSigningKeyStore>/Users/rob/Projects/Sport/Sport.Mobile.Droid/Resources/Security/androiddebugkey.keystore</AndroidSigningKeyStore>
+<AndroidKeyStore></AndroidKeyStore>
+<AndroidSigningKeyStore>androiddebugkey.keystore</AndroidSigningKeyStore>
 <AndroidSigningStorePass>android</AndroidSigningStorePass>
 <AndroidSigningKeyAlias>androiddebugkey</AndroidSigningKeyAlias>
 <AndroidSigningKeyPass>android</AndroidSigningKeyPass>
@@ -274,6 +274,12 @@
     <Reference Include="SimpleAuth.Google.Droid">
       <HintPath>..\packages\Clancey.SimpleAuth.Google.Droid.1.0.8\lib\MonoAndroid\SimpleAuth.Google.Droid.dll</HintPath>
     </Reference>
+    <Reference Include="Plugin.Battery.Abstractions">
+      <HintPath>..\packages\Xam.Plugin.Battery.2.1.1\lib\MonoAndroid10\Plugin.Battery.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Plugin.Battery">
+      <HintPath>..\packages\Xam.Plugin.Battery.2.1.1\lib\MonoAndroid10\Plugin.Battery.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MainActivity.cs" />
@@ -362,6 +368,8 @@
     <AndroidResource Include="Resources\values-v21\styles.xml" />
     <AndroidResource Include="Resources\drawable\action_bar_background.xml" />
     <AndroidResource Include="Resources\drawable\no_pic.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\Check.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\Crash.png" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Sport.Mobile.Shared\Sport.Mobile.Shared.csproj">

@@ -2,48 +2,35 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
-using Microsoft.WindowsAzure.MobileServices.Sync;
 using Plugin.Connectivity;
-using Microsoft.WindowsAzure.MobileServices;
 using System.Linq;
 using System.Text;
 using Xamarin.Forms;
+using Sport.Mobile.Shared.Services;
 
 namespace Sport.Mobile.Shared
 {
-	public class BaseManager<T> where T : BaseModel
+	public class BaseManager<T> where T : BaseModel, new ()
 	{
 		public virtual string Identifier => "Items";
 
-		IMobileServiceSyncTable<T> table;
-		public IMobileServiceSyncTable<T> Table
-		{
-			get
-			{
-				return table ?? (table = AzureService.Instance.Client.GetSyncTable<T>());
-			}
-		}
-
 		public void DropTable()
 		{
-			table = null;
+			
 		}
 
-		public virtual async Task<IList<T>> GetItemsAsync(bool forceRefresh = false)
-		{
-			if(forceRefresh)
-				await PullLatestAsync().ConfigureAwait(false);
+		public List<T> Table => LocalDatabase.GetItems<T> ();
 
-			var enu = await Table.ToEnumerableAsync().ConfigureAwait(false);
-			return enu.ToList();
+		public virtual IList<T> GetItems(bool forceRefresh = false)
+		{
+
+			return LocalDatabase.GetItems<T> ();
 		}
 
-		public virtual async Task<T> GetItemAsync(string id, bool forceRefresh = false)
+		public virtual T GetItem(string id, bool forceRefresh = false)
 		{
-			if(forceRefresh)
-				await PullLatestAsync().ConfigureAwait(false);
 
-			var item = await Table.LookupAsync(id).ConfigureAwait(false);
+			var item = LocalDatabase.GetItem<T> (id);
 			return item;
 		}
 
@@ -61,16 +48,16 @@ namespace Sport.Mobile.Shared
 
 		public virtual async Task<bool> InsertAsync(T item)
 		{
-			await Table.InsertAsync(item).ConfigureAwait(false);
-			var success = await SyncAsync().ConfigureAwait(false);
+			LocalDatabase.Insert (item);
+			var success = await SyncAsync ();
 
-			if(success)
-			{
-				var updated = await GetItemAsync(item.Id, false).ConfigureAwait(false);
-				item.Version = updated.Version;
-				item.UpdatedAt = updated.UpdatedAt;
+			//if(success)
+			//{
+			//	var updated = GetItem (item.Id, false);
+			//	item.Version = updated.Version;
+			//	item.UpdatedAt = updated.UpdatedAt;
 
-			}
+			//}
 
 			return success;
 		}
@@ -79,12 +66,12 @@ namespace Sport.Mobile.Shared
 		{
 			try
 			{
-				await Table.UpdateAsync(item).ConfigureAwait(false);
+				LocalDatabase.Update (item);
 				var success = await SyncAsync().ConfigureAwait(false);
-				var updated = await GetItemAsync(item.Id, false).ConfigureAwait(false);
+				var updated = GetItem (item.Id, false);
 
-				item.Version = updated.Version;
-				item.UpdatedAt = updated.UpdatedAt;
+				//item.Version = updated.Version;
+				//item.UpdatedAt = updated.UpdatedAt;;
 
 				return success;
 			}
@@ -97,77 +84,21 @@ namespace Sport.Mobile.Shared
 
 		public virtual async Task<bool> RemoveAsync(T item)
 		{
-			await Table.DeleteAsync(item).ConfigureAwait(false);
+			LocalDatabase.Delete (item);
 			var success = await SyncAsync().ConfigureAwait(false);
 			return success;
 		}
 
 		public async Task<bool> PullLatestAsync()
 		{
-			if(!CrossConnectivity.Current.IsConnected)
-			{
-				Debug.WriteLine("Unable to pull items, we are offline");
-				return false;
-			}
-			try
-			{
-				//Pull down any content from the server that doesn't exist locally and add it to the local database
-				await Table.PullAsync($"all{Identifier}", Table.CreateQuery()).ConfigureAwait(false);
-			}
-			catch(Exception ex)
-			{
-				Debug.WriteLine($"Pull sync error for {Identifier}\n" + ex);
-				MessagingCenter.Send(new object(), Messages.ExceptionOccurred, ex);
-				return false;
-			}
+			await Task.Delay (1000);
 			return true;
 		}
 
 
 		public async Task<bool> SyncAsync()
 		{
-			if(!CrossConnectivity.Current.IsConnected)
-			{
-				Debug.WriteLine("Unable to sync items, we are offline");
-				return false;
-			}
-			try
-			{
-				await AzureService.Instance.Client.SyncContext.PushAsync();
-
-				if(!(await PullLatestAsync()))
-					return false;
-			}
-			catch(MobileServicePushFailedException ex)
-			{
-				if(ex.PushResult?.Errors != null)
-				{
-					foreach(var error in ex.PushResult.Errors)
-					{
-						if(error.OperationKind == MobileServiceTableOperationKind.Update && error.Result != null)
-						{
-							//Update failed, reverting to server's copy
-							await error.CancelAndUpdateItemAsync(error.Result);
-						}
-						else
-						{
-							//Discard local change
-							await error.CancelAndDiscardItemAsync();
-						}
-
-						var sb = new StringBuilder();
-						foreach(var v in error.Result)
-							sb.AppendLine(v.Value.ToString());
-
-						MessagingCenter.Send(new object(), Messages.ExceptionOccurred, new Exception(sb.ToString()));
-						Debug.WriteLine($"Error executing sync operation. Item: {error.TableName} ({error.Item["id"]}). Operation discarded - {sb.ToString()}\n\n");
-					}
-				}
-
-				Debug.WriteLine("Unable to sync\n" + ex);
-				return false;
-			}
-
+			await Task.Delay (1000);
 			return true;
 		}
 	}

@@ -65,10 +65,10 @@ namespace Sport.Mobile.Shared
 					await AzureService.Instance.ChallengeManager.PullLatestAsync().ConfigureAwait(false);
 				}
 
-				var list = await AzureService.Instance.ChallengeManager.Table.Where(c => c.DateCompleted != null
+				var list = AzureService.Instance.ChallengeManager.Table.Where(c => c.DateCompleted != null
 					  && (c.ChallengerAthleteId == Membership.AthleteId || c.ChallengeeAthleteId == Membership.AthleteId)
-					  && c.LeagueId == Membership.LeagueId)
-                      .OrderByDescending(c => c.DateCompleted).ToListAsync();
+					  && c.LeagueId == Membership.LeagueId).ToList ()
+                      .OrderByDescending(c => c.DateCompleted).ToList();
 
 				Challenges.Clear();
 				list.ForEach(c => Challenges.Add(new ChallengeViewModel { Challenge = c }));

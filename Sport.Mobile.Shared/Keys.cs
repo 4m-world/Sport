@@ -1,10 +1,9 @@
-﻿using Microsoft.WindowsAzure.MobileServices;
-
+﻿
 namespace Sport.Mobile.Shared
 {
 	public class Keys
 	{
-		public static readonly MobileServiceAuthenticationProvider AuthenticationProvider = MobileServiceAuthenticationProvider.Google;
+		//public static readonly MobileServiceAuthenticationProvider AuthenticationProvider = MobileServiceAuthenticationProvider.Google;
 		public static string GoogleClientId;
 		public static string GoogleServerID;
 		public static readonly string MobileCenterKeyiOS = string.Empty;

@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using System.Diagnostics;
+using Sport.Mobile.Shared.Services;
 
 namespace Sport.Mobile.Shared
 {
@@ -11,12 +12,8 @@ namespace Sport.Mobile.Shared
 
 		public Task<Athlete> GetAthleteByEmail(string email)
 		{
-			return new Task<Athlete>(() => {
-				//We hit the backend table instead of local store since we might not have data
-				var list = AzureService.Instance.Client.GetTable<Athlete>().Where(a => a.Email == email).ToListAsync().Result;
-				var athlete = list.FirstOrDefault();
-				return athlete;
-			});
+			var a = LocalDatabase.GetItems<Athlete> ().FirstOrDefault (x=> x.Email == email);
+			return Task.FromResult (a);
 		}
 
 		async public override Task<bool> UpdateAsync(Athlete item)
@@ -25,9 +22,7 @@ namespace Sport.Mobile.Shared
 
 			if(item.Id == App.Instance.CurrentAthlete?.Id)
 			{
-				Task.Run(async () => {
-					App.Instance.CurrentAthlete = await AzureService.Instance.AthleteManager.Table.LookupAsync(item.Id);
-				}).Wait();
+				App.Instance.CurrentAthlete = AzureService.Instance.AthleteManager.GetItem(item.Id);
 			}
 
 			return result;

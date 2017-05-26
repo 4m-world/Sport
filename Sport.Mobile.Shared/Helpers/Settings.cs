@@ -111,7 +111,7 @@ namespace Sport.Mobile.Shared
 		{
 			get
 			{
-				return AppSettings.GetValueOrDefault<string>(_azureUserId, null);
+				return AppSettings.GetValueOrDefault<string>(_azureUserId, "sid:e687ba76d3d0ac229f764064a7db0bb4");
 			}
 			set
 			{

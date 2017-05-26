@@ -20,9 +20,7 @@ namespace Sport.Mobile.Shared
 			{
 				if(_league == null)
 				{
-						Task.Run(async () => {
-							_league = await AzureService.Instance.LeagueManager.GetItemAsync(_leagueId);
-						}).Wait();
+					_league = AzureService.Instance.LeagueManager.GetItem(_leagueId);
 				}
 
 				return _league;
@@ -52,7 +50,7 @@ namespace Sport.Mobile.Shared
 		{
 			using(new Busy(this))
 			{
-				await AzureService.Instance.LeagueManager.GetItemAsync(League.Id, forceRefresh);
+				AzureService.Instance.LeagueManager.GetItem(League.Id, forceRefresh);
 
 				_league = null;
 				League.LocalRefresh();

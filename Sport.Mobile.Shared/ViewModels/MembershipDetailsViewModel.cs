@@ -16,7 +16,7 @@ namespace Sport.Mobile.Shared
 		{
 			using(new Busy(this))
 			{
-				await AzureService.Instance.MembershipManager.GetItemAsync(Membership.Id, true);
+				AzureService.Instance.MembershipManager.GetItem(Membership.Id, true);
 				//var task = AzureService.Instance.GetMembershipById(MembershipId, true);
 				//await RunSafe(task);
 

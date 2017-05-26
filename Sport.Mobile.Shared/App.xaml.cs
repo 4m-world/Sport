@@ -4,10 +4,12 @@ using System.Diagnostics;
 using Microsoft.Azure.Mobile;
 using Microsoft.Azure.Mobile.Analytics;
 using Microsoft.Azure.Mobile.Crashes;
-using Microsoft.WindowsAzure.MobileServices;
 using Newtonsoft.Json;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
+using System.Threading.Tasks;
+using Sport.Mobile.Shared.Pages;
+using Plugin.Battery;
 
 [assembly: XamlCompilation(XamlCompilationOptions.Compile)]
 
@@ -77,20 +79,53 @@ namespace Sport.Mobile.Shared
 			InitializeComponent ();
 		}
 
+		bool IsCharging;
 		protected override void OnStart()
 		{
-			// Handle when your app starts
-			MobileCenter.Start (typeof (Analytics), typeof (Crashes));
+			IsCharging = CrossBattery.Current.PowerSource != Plugin.Battery.Abstractions.PowerSource.Battery;
+			CrossBattery.Current.BatteryChanged += async (sender, e) => {
+				var isCharging = e.PowerSource != Plugin.Battery.Abstractions.PowerSource.Battery;
+				if (IsCharging && !isCharging) {
+					await TestRunner.Shared.Reset ();
+					TestRunner.Shared.StartTests ();
+				}
+				IsCharging = isCharging;
+
+			};
+			Settings.AthleteId = null;
+			Settings.RegistrationComplete = false;
+			// Handle when your app starts]
+			MobileCenter.Start("android=f4a675cf-1cea-4162-99fd-d576ac35665d;" + 
+			"ios=54076fc4-1ab5-4e71-aed9-8a593b46d3c1",
+                   typeof (Analytics), typeof (Crashes));
 			MessagingCenter.Subscribe<object, Exception> (this, Messages.ExceptionOccurred, OnAppExceptionOccurred);
 
-			if (Settings.AthleteId == null || !Settings.RegistrationComplete) {
+			TestRunner.Shared.OnReset = () => {
+				Settings.AthleteId = null;
+				Settings.RegistrationComplete = false;
+				//MainPage.Navigation.PushModalAsync (new BlankPage (), false);
+			};
+			TestRunner.Shared.OnFail = () => {
+				MainPage.Navigation.PushModalAsync (new ErrorPage());
+			};
+			TestRunner.Shared.OnSuccess = () => {
+				MainPage.Navigation.PushModalAsync (new SuccessPage());
+			};
+			TestRunner.Shared.OnStart = () => {
 				StartRegistrationFlow ();
-			}
-			else {
-				StartAuthenticationFlow ();
-			}
+			};
+			TestRunner.Shared.StartTests ();
 		}
 
+		async Task dismissAll ()
+		{
+			var hasModal = MainPage?.Navigation?.ModalStack?.Count > 0;
+			while (hasModal) {
+				await MainPage.Navigation.PopModalAsync (false);
+				hasModal = MainPage?.Navigation?.ModalStack?.Count > 0;
+			}
+				
+		}
 		protected override void OnSleep()
 		{
 			// Handle when your app sleeps
@@ -99,6 +134,7 @@ namespace Sport.Mobile.Shared
 		protected override void OnResume()
 		{
 			// Handle when your app resumes
+			//TestRunner.Shared.StartTests ();
 		}
 
 		/// <summary>

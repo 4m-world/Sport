@@ -138,6 +138,8 @@ namespace Sport.Mobile.Shared
 			}
 
 			App.Instance.ProcessPendingPayload();
+			if(btnDone != null)
+				btnDone.Clicked += Done;
 			base.OnAppearing();
 		}
 
@@ -146,6 +148,8 @@ namespace Sport.Mobile.Shared
 			MessagingCenter.Unsubscribe<AuthenticationViewModel>(this, Messages.UserAuthenticated);
 			_hasSubscribed = false;
 
+			if (btnDone != null)
+				btnDone.Clicked -= Done;
 			base.OnDisappearing();
 			EvaluateNavigationStack();
 		}
@@ -192,19 +196,21 @@ namespace Sport.Mobile.Shared
 			nav.BarBackgroundColor = BarBackgroundColor;
 			nav.BarTextColor = BarTextColor;
 		}
-
+		ToolbarItem btnDone;
 		public void AddDoneButton(string text = "Done", ContentPage page = null)
 		{
-			var btnDone = new ToolbarItem {
+			btnDone = new ToolbarItem {
 				AutomationId = "doneButton",
 				Text = text,
 			};
 
-			btnDone.Clicked += async(sender, e) =>
-			await Navigation.PopModalAsync();
-
 			page = page ?? this;
 			page.ToolbarItems.Add(btnDone);
+		}
+
+		public async void Done (object sender, EventArgs e)
+		{
+			await Navigation.PopModalAsync ();
 		}
 
 		protected virtual void TrackPage(Dictionary<string, string> metadata)

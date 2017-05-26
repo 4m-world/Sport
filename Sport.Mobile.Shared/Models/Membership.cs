@@ -17,9 +17,7 @@ namespace Sport.Mobile.Shared
 			{
 				if(_league == null)
 				{
-					Task.Run(async () => {
-						_league = await AzureService.Instance.LeagueManager.Table.LookupAsync(LeagueId);
-					}).Wait();
+					_league =  AzureService.Instance.LeagueManager.GetItem(LeagueId);
 				}
 
 				return _league;
@@ -34,9 +32,7 @@ namespace Sport.Mobile.Shared
 			{
 				if(_athlete == null)
 				{
-					Task.Run(async () => {
-						_athlete = await AzureService.Instance.AthleteManager.Table.LookupAsync(AthleteId);
-					}).Wait();
+					_athlete = AzureService.Instance.AthleteManager.GetItem(AthleteId);
 				}
 
 				return _athlete;

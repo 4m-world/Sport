@@ -18,9 +18,7 @@ namespace Sport.Mobile.Shared
 			{
 				if(_league == null)
 				{
-					Task.Run(async () => {
-						_league = await AzureService.Instance.LeagueManager.Table.LookupAsync(LeagueId);
-					}).Wait();
+					_league = AzureService.Instance.LeagueManager.GetItem (LeagueId);
 				}
 
 				return _league;
@@ -35,9 +33,7 @@ namespace Sport.Mobile.Shared
 			{
 				if(_challengeeAthlete == null)
 				{
-					Task.Run(async () => {
-						_challengeeAthlete = await AzureService.Instance.AthleteManager.Table.LookupAsync(ChallengeeAthleteId);
-					}).Wait();
+					_challengeeAthlete = AzureService.Instance.AthleteManager.GetItem(ChallengeeAthleteId);
 				}
 
 				return _challengeeAthlete;
@@ -52,9 +48,7 @@ namespace Sport.Mobile.Shared
 			{
 				if(_challengerAthlete == null)
 				{
-					Task.Run(async () => {
-						_challengerAthlete = await AzureService.Instance.AthleteManager.Table.LookupAsync(ChallengerAthleteId);
-					}).Wait();
+						_challengerAthlete = AzureService.Instance.AthleteManager.GetItem(ChallengerAthleteId);
 				}
 
 				return _challengerAthlete;
@@ -69,9 +63,7 @@ namespace Sport.Mobile.Shared
 			{
 				if(_matchResult == null)
 				{
-					Task.Run(async () => {
-						_matchResult = await AzureService.Instance.GameResultManager.Table.Where(r => r.ChallengeId == Id).ToListAsync();
-					}).Wait();
+					_matchResult = AzureService.Instance.GameResultManager.Table.Where(r => r.ChallengeId == Id).ToList();
 				}
 
 				return _matchResult;

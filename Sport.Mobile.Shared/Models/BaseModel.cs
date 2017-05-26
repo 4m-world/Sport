@@ -1,16 +1,21 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
-using Microsoft.WindowsAzure.MobileServices;
 using Newtonsoft.Json;
+using SQLite;
 
 namespace Sport.Mobile.Shared
 {
 	public class BaseModel : BaseNotify, IDirty
 	{
+		public BaseModel ()
+		{
+
+		}
 		string _id;
 
 		[JsonProperty("id")]
+		[PrimaryKey]
 		public string Id
 		{
 			get
@@ -39,7 +44,6 @@ namespace Sport.Mobile.Shared
 
 		DateTime? _createdAt;
 
-		[CreatedAt]
 		public DateTime? CreatedAt
 		{
 			get
@@ -54,7 +58,6 @@ namespace Sport.Mobile.Shared
 
 		string _version;
 
-		[Version]
 		public string Version
 		{
 			get
@@ -68,6 +71,7 @@ namespace Sport.Mobile.Shared
 		}
 
 		[JsonIgnore]
+		[Ignore]
 		public bool IsDirty
 		{
 			get;

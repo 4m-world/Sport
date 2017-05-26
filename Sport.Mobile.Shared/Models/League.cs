@@ -39,7 +39,7 @@ namespace Sport.Mobile.Shared
 				if(_createdByAthlete == null)
 				{
 					Task.Run(async () => {
-						_createdByAthlete = await AzureService.Instance.AthleteManager.Table.LookupAsync(CreatedByAthleteId);
+						_createdByAthlete = AzureService.Instance.AthleteManager.GetItem(CreatedByAthleteId);
 					}).Wait();
 				}
 
@@ -56,9 +56,7 @@ namespace Sport.Mobile.Shared
 			{
 				if(_memberships == null)
 				{
-					Task.Run(async () => {
-						_memberships = await AzureService.Instance.MembershipManager.Table.Where(i => i.LeagueId == Id && i.AbandonDate == null).ToListAsync();
-					}).Wait();
+					_memberships =  AzureService.Instance.MembershipManager.Table.Where(i => i.LeagueId == Id && i.AbandonDate == null).ToList();
 
 					Sort();
 				}
@@ -76,9 +74,7 @@ namespace Sport.Mobile.Shared
 			{
 				if(_ongoingChallenges == null)
 				{
-					Task.Run(async () => {
-						_ongoingChallenges = await AzureService.Instance.ChallengeManager.Table.Where(i => i.LeagueId == Id && i.DateCompleted == null).ToListAsync();
-					}).Wait();
+					_ongoingChallenges = AzureService.Instance.ChallengeManager.Table.Where(i => i.LeagueId == Id && i.DateCompleted == null).ToList();
 				}
 
 				return _ongoingChallenges;
@@ -94,9 +90,8 @@ namespace Sport.Mobile.Shared
 			{
 				if(_pastChallenges == null)
 				{
-					Task.Run(async () => {
-						_pastChallenges = await AzureService.Instance.ChallengeManager.Table.Where(i => i.LeagueId == Id && i.DateCompleted != null).ToListAsync();
-					}).Wait();
+					_pastChallenges =  AzureService.Instance.ChallengeManager.Table.Where(i => i.LeagueId == Id && i.DateCompleted != null).ToList();
+
 				}
 
 				return _pastChallenges;

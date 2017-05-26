@@ -29,10 +29,7 @@ namespace Sport.Mobile.Shared
 			{
 				if(_athlete == null && AthleteId != null)
 				{
-					Task.Run(async () =>
-					{
-						_athlete = await AzureService.Instance.AthleteManager.Table.LookupAsync(AthleteId);
-					}).Wait();
+					_athlete = AzureService.Instance.AthleteManager.GetItem(AthleteId);
 				}
 				return _athlete;
 			}

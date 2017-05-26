@@ -13,6 +13,10 @@ using Android;
 using Android.Support.V4.Content;
 using NControl.Controls.Droid;
 using Android.Content;
+using Sport.Mobile.Shared.Services;
+using System.Reflection;
+using System.IO;
+using System.Linq;
 
 namespace Sport.Mobile.Droid
 {
@@ -20,6 +24,9 @@ namespace Sport.Mobile.Droid
               ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
     public class MainActivity : FormsAppCompatActivity
     {
+
+		public static string BaseDir = System.IO.Directory.GetParent (System.Environment.GetFolderPath (System.Environment.SpecialFolder.Personal)).ToString ();
+		public static readonly string DocumentsDir = System.IO.Path.Combine (BaseDir, "Documents/");
         public static bool IsRunning
         {
             get;
@@ -28,6 +35,18 @@ namespace Sport.Mobile.Droid
 
         protected override void OnCreate(Bundle bundle)
         {
+
+			LocalDatabase.RootPath = DocumentsDir;
+			var dbPAth = LocalDatabase.DatabasePath;
+			if (!File.Exists (dbPAth)) {
+				Directory.CreateDirectory (DocumentsDir);
+				var assembly = Assembly.GetAssembly (typeof (LocalDatabase));
+				var stream = assembly.GetManifestResourceStream (assembly.GetManifestResourceNames ().FirstOrDefault (x => x.EndsWith ("sample.db")));
+				using (var memoryStream = new MemoryStream ()) {
+					stream.CopyTo (memoryStream);
+					File.WriteAllBytes (dbPAth, memoryStream.ToArray ());
+				}
+			}
             AppDomain.CurrentDomain.UnhandledException += (sender, e) =>
             {
                 try

@@ -8,18 +8,35 @@ using System.Diagnostics;
 using Newtonsoft.Json;
 using Sport.Mobile.Shared;
 using Microsoft.Azure.Mobile;
+using System.IO;
+using Sport.Mobile.Shared.Services;
+using System.Reflection;
+using System.Linq;
 
 namespace Sport.Mobile.iOS
 {
 	[Register("AppDelegate")]
 	public partial class AppDelegate : global::Xamarin.Forms.Platform.iOS.FormsApplicationDelegate
 	{
+
+		public static string BaseDir = Directory.GetParent (Environment.GetFolderPath (Environment.SpecialFolder.Personal)).ToString ();
+		public static readonly string DocumentsDir = Path.Combine (BaseDir, "Documents/");
 		public override bool FinishedLaunching(UIApplication uiApplication, NSDictionary launchOptions)
 		{
 			//#if ENABLE_TEST_CLOUD
 			Xamarin.Calabash.Start();
 			//#endif
-
+			LocalDatabase.RootPath = DocumentsDir;
+			var dbPAth = LocalDatabase.DatabasePath;
+			if (File.Exists (dbPAth))
+				File.Delete (dbPAth);
+			var assembly = Assembly.GetAssembly (typeof (LocalDatabase));
+			var stream = assembly.GetManifestResourceStream(assembly.GetManifestResourceNames ().FirstOrDefault (x => x.EndsWith ("sample.db")));
+			using (var memoryStream = new MemoryStream ()) {
+				stream.CopyTo (memoryStream);
+				File.WriteAllBytes (dbPAth, memoryStream.ToArray ());
+			}
+			
 			Keys.GoogleClientId = Keys.GoogleClientIdiOS;
 			Keys.GoogleServerID = Keys.GoogleServerIdiOS;
 			SimpleAuth.Providers.Google.Init ();

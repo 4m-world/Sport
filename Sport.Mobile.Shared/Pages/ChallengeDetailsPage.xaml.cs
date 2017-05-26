@@ -48,6 +48,8 @@ namespace Sport.Mobile.Shared
 		{
 			RefreshMenuButtons();
 			base.OnAppearing();
+
+			list.ItemSelected += ItemSelected;
 		}
 
 		protected override void Initialize()
@@ -55,10 +57,6 @@ namespace Sport.Mobile.Shared
 			InitializeComponent();
 			Title = "Challenge";
 
-			list.ItemSelected += (sender, e) =>
-			{
-				list.SelectedItem = null;
-			};
 
 			var count = ViewModel.Challenge.League.MatchGameCount;
 
@@ -68,6 +66,15 @@ namespace Sport.Mobile.Shared
 			list.HeightRequest = list.RowHeight * count + 50;
 		}
 
+		void ItemSelected (object sender, EventArgs e)
+		{
+			list.SelectedItem = null;
+		}
+		protected override void OnDisappearing ()
+		{
+			list.ItemSelected -= ItemSelected;
+			base.OnDisappearing ();
+		}
 		protected override void TrackPage(Dictionary<string, string> metadata)
 		{
 			if(ViewModel?.Challenge != null)

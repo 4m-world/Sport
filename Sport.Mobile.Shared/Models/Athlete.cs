@@ -35,7 +35,7 @@ namespace Sport.Mobile.Shared
 				if(_memberships == null)
 				{
 					Task.Run(async () => {
-						_memberships = await AzureService.Instance.MembershipManager.Table.Where(i => i.AthleteId == Id && i.AbandonDate == null).ToListAsync();
+						_memberships = AzureService.Instance.MembershipManager.Table.Where(i => i.AthleteId == Id && i.AbandonDate == null).ToList();
 					}).Wait();
 				}
 

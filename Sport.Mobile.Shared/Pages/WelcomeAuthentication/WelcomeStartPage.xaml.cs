@@ -30,7 +30,7 @@ namespace Sport.Mobile.Shared
 			Title = "Welcome!";
 		}
 
-		async void AuthButtonClicked(object sender, EventArgs e)
+		public async void AuthButtonClicked(object sender, EventArgs e)
 		{
 			await ViewModel.Authenticate();
 

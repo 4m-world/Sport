@@ -44,7 +44,7 @@ namespace Sport.Mobile.Shared
 				try
 				{
 					var leagueIds = App.Instance.CurrentAthlete.Memberships.Select(m => m.LeagueId).ToList();
-					var toJoin = await AzureService.Instance.LeagueManager.Table.Where(l => l.IsAcceptingMembers && l.IsEnabled).ToListAsync();
+					var toJoin = AzureService.Instance.LeagueManager.Table.Where(l => l.IsAcceptingMembers && l.IsEnabled).ToList();
 
 					if(leagueIds.Count > 0)
 					{

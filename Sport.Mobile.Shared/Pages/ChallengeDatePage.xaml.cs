@@ -38,46 +38,52 @@ namespace Sport.Mobile.Shared
 
 			Initialize();
 		}
-
+		ToolbarItem btnCancel;
 		protected override void Initialize()
 		{
 			InitializeComponent();
 			Title = "Date and Time";
 
-			btnChallenge.Clicked += async(sender, e) =>
-			{
-				var errors = ViewModel.Validate();
 
-				if(errors != null)
-				{
-					errors.ToToast(ToastNotificationType.Error);
-					return;
-				}
-
-				Challenge challenge;
-				using(new HUD("Sending challenge..."))
-				{
-					challenge = await ViewModel.PostChallenge();
-				}
-
-				if(OnChallengeSent != null && challenge != null && challenge.Id != null)
-					OnChallengeSent(challenge);
-			};
-
-			var btnCancel = new ToolbarItem {
+			btnCancel = new ToolbarItem {
 				Text = "Cancel"
 			};
 
-			btnCancel.Clicked += async(sender, e) =>
-			{
-				await Navigation.PopModalAsync();		
-			};
 
 			ToolbarItems.Add(btnCancel);
 		}
+		public async void Challenge (object sender, EventArgs e)
+		{
+			var errors = ViewModel.Validate ();
 
+			if (errors != null) {
+				errors.ToToast (ToastNotificationType.Error);
+				return;
+			}
+
+			Challenge challenge;
+			using (new HUD ("Sending challenge...")) {
+				challenge = await ViewModel.PostChallenge ();
+			}
+
+			if (OnChallengeSent != null && challenge != null && challenge.Id != null)
+				OnChallengeSent (challenge);
+		}
+		public async void Canceled (object sender, EventArgs e)
+		{
+			await Navigation.PopModalAsync ();
+		}
+
+		protected override void OnAppearing ()
+		{
+			base.OnAppearing ();
+			btnChallenge.Clicked += Challenge;
+			btnCancel.Clicked += Canceled;
+		}
 		protected override void OnDisappearing()
 		{
+			btnChallenge.Clicked -= Challenge;
+			btnCancel.Clicked -= Canceled;
 			ViewModel.CancelTasks();
 			base.OnDisappearing();
 		}

@@ -41,7 +41,7 @@ namespace Sport.Mobile.Shared
 			Title = "Athlete Alias";
 		}
 
-		async void SaveButtonClicked(object sender, EventArgs e)
+		public async void SaveButtonClicked(object sender, EventArgs e)
 		{
 			if(string.IsNullOrWhiteSpace(ViewModel.Athlete.Alias))
 			{

@@ -2,7 +2,6 @@ using System;
 using System.Diagnostics;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Microsoft.WindowsAzure.MobileServices;
 using Sport.Mobile.Shared;
 using Xamarin.Forms;
 using System.Linq;
@@ -12,6 +11,7 @@ using System.Net;
 using System.Collections.Generic;
 using SimpleAuth;
 using SimpleAuth.Providers;
+using Sport.Mobile.Shared.Services;
 
 namespace Sport.Mobile.Shared
 {
@@ -47,159 +47,166 @@ namespace Sport.Mobile.Shared
 		/// </summary>
 		public async Task Authenticate()
 		{
-			using(new Busy(this))
-			{
-				if (!string.IsNullOrEmpty(Settings.AzureUserId))
-				{
-					//We already have an exsting google auth token that is still valid, no need to do anything else
-					AzureService.Instance.Client.CurrentUser = new MobileServiceUser(Settings.AzureUserId)
-					{
-						MobileServiceAuthenticationToken = Settings.AzureAuthToken
-					};
+			//await Task.Delay (1000);
+			Settings.RegistrationComplete = true;
+			Settings.AzureAuthToken = "Foo";
+			Settings.AzureUserId = "sid:e687ba76d3d0ac229f764064a7db0bb4";
 
-					bool clearCookies = true;
-					bool didErr = false;
-					try
-					{
-						var success = await GetUserProfile();
+			await GetUserProfile ();
+			return;
+			//using(new Busy(this))
+			//{
+			//	if (!string.IsNullOrEmpty(Settings.AzureUserId))
+			//	{
+			//		//We already have an exsting google auth token that is still valid, no need to do anything else
+			//		AzureService.Instance.Client.CurrentUser = new MobileServiceUser(Settings.AzureUserId)
+			//		{
+			//			MobileServiceAuthenticationToken = Settings.AzureAuthToken
+			//		};
 
-						if(success)
-							return;
-					}
-					catch(MobileServiceInvalidOperationException mse)
-					{
-						//Bad or stale credentials, clear out and retry
-						if(mse.Response.StatusCode == HttpStatusCode.Forbidden)
-						{
-							clearCookies = false;
-						}
-						didErr = true;
-						Debug.WriteLine(mse);
-					}
-					catch(Exception e)
-					{
-						Debug.WriteLine(e);
-						didErr = true;
-					}
+			//		bool clearCookies = true;
+			//		bool didErr = false;
+			//		try
+			//		{
+			//			var success = await GetUserProfile();
 
-					if(didErr)
-					{
-						await LogOut(clearCookies);
-						await Authenticate();
-						return;
-					}
-				}
+			//			if(success)
+			//				return;
+			//		}
+			//		catch(MobileServiceInvalidOperationException mse)
+			//		{
+			//			//Bad or stale credentials, clear out and retry
+			//			if(mse.Response.StatusCode == HttpStatusCode.Forbidden)
+			//			{
+			//				clearCookies = false;
+			//			}
+			//			didErr = true;
+			//			Debug.WriteLine(mse);
+			//		}
+			//		catch(Exception e)
+			//		{
+			//			Debug.WriteLine(e);
+			//			didErr = true;
+			//		}
 
-				try
-				{
-					AuthenticationStatus = "Loading...";
-                    MobileServiceUser user = await AuthenticateWithGoogle();
+			//		if(didErr)
+			//		{
+			//			await LogOut(clearCookies);
+			//			await Authenticate();
+			//			return;
+			//		}
+			//	}
 
-					if(user != null)
-					{
-						await SetIdentityValues(user);
-						await GetUserProfile();
-					}
-				}
-				catch(InvalidOperationException ie)
-				{
-					//User cancelled
-				}
-				catch(Exception e)
-				{
-					MessagingCenter.Send(new object(), Messages.ExceptionOccurred, e);
-				}
-			}
+			//	try
+			//	{
+			//		AuthenticationStatus = "Loading...";
+			//                 MobileServiceUser user = await AuthenticateWithGoogle();
+
+			//		if(user != null)
+			//		{
+			//			await SetIdentityValues(user);
+			//			await GetUserProfile();
+			//		}
+			//	}
+			//	catch(InvalidOperationException ie)
+			//	{
+			//		//User cancelled
+			//	}
+			//	catch(Exception e)
+			//	{
+			//		MessagingCenter.Send(new object(), Messages.ExceptionOccurred, e);
+			//	}
+			//}
 		}
 
-		public async Task<MobileServiceUser> AuthenticateWithGoogle()
-		{
-			Account account = null;
-			GoogleApi api = null;
+		//public async Task<MobileServiceUser> AuthenticateWithGoogle()
+		//{
+		//	Account account = null;
+		//	GoogleApi api = null;
 
-			try
-			{
-				var scopes = new[]
-				{
-					"https://www.googleapis.com/auth/userinfo.email",
-					"https://www.googleapis.com/auth/userinfo.profile",
-				};
+		//	try
+		//	{
+		//		var scopes = new[]
+		//		{
+		//			"https://www.googleapis.com/auth/userinfo.email",
+		//			"https://www.googleapis.com/auth/userinfo.profile",
+		//		};
 
-				api = new GoogleApi("google", Keys.GoogleClientId)
-				{
-					ServerClientId = Keys.GoogleServerID,
-					Scopes = scopes,
-				};
+		//		api = new GoogleApi("google", Keys.GoogleClientId)
+		//		{
+		//			ServerClientId = Keys.GoogleServerID,
+		//			Scopes = scopes,
+		//		};
 
-				account = await api.Authenticate();
-				var oauth = account as OAuthAccount;
-				var token = account.UserData["ServerToken"];
+		//		account = await api.Authenticate();
+		//		var oauth = account as OAuthAccount;
+		//		var token = account.UserData["ServerToken"];
 
-				if (account != null)
-				{
-					var jObject = JObject.Parse($"{{'id_token':'{oauth.IdToken}', 'authorization_code':'{token}'}}");
-					var usr = await AzureService.Instance.Client.LoginAsync(MobileServiceAuthenticationProvider.Google, jObject);
-					return usr;
-				}
-			}
-			catch(MobileServiceInvalidOperationException e)
-			{
-				if (e.Response.StatusCode == System.Net.HttpStatusCode.InternalServerError)
-				{
-					if (api != null)
-					{
-						api.ResetData();
-						return await AuthenticateWithGoogle();
-					}
-				}
+		//		if (account != null)
+		//		{
+		//			var jObject = JObject.Parse($"{{'id_token':'{oauth.IdToken}', 'authorization_code':'{token}'}}");
+		//			var usr = await AzureService.Instance.Client.LoginAsync(MobileServiceAuthenticationProvider.Google, jObject);
+		//			return usr;
+		//		}
+		//	}
+		//	catch(MobileServiceInvalidOperationException e)
+		//	{
+		//		if (e.Response.StatusCode == System.Net.HttpStatusCode.InternalServerError)
+		//		{
+		//			if (api != null)
+		//			{
+		//				api.ResetData();
+		//				return await AuthenticateWithGoogle();
+		//			}
+		//		}
 
-				Debug.WriteLine(e);
-			}
-			catch (Exception ex)
-			{
-				Debug.WriteLine(ex);
-			}
+		//		Debug.WriteLine(e);
+		//	}
+		//	catch (Exception ex)
+		//	{
+		//		Debug.WriteLine(ex);
+		//	}
 
-			return null;
-		}
-
-
+		//	return null;
+		//}
 
 
-		AppServiceIdentity _identity;
-		async Task SetIdentityValues(MobileServiceUser user)
-		{
-			//Manually calling /.auth/me against remote server because InvokeApiAsync against a local instance of Azure will never hit the remote endpoint
-			//If you are not debugging your service locally, you can just use InvokeApiAsync("/.auth/me") 
-			if(_identity == null)
-			{
-				using(var client = new HttpClient())
-				{
-					client.DefaultRequestHeaders.Add("ZUMO-API-VERSION", "2.0.0");
-					client.DefaultRequestHeaders.Add("X-ZUMO-AUTH", AzureService.Instance.Client.CurrentUser.MobileServiceAuthenticationToken);
-					var json = await client.GetStringAsync($"{Keys.AzureDomainRemote}/.auth/me");
-					_identity = JsonConvert.DeserializeObject<List<AppServiceIdentity>>(json).FirstOrDefault();
-				}
-			}
 
-			if(_identity != null)
-			{
-				Settings.AzureAuthToken = user.MobileServiceAuthenticationToken;
-				Settings.AzureUserId = user.UserId;
 
-				switch(Keys.AuthenticationProvider)
-				{
-					case MobileServiceAuthenticationProvider.Google:
-						Settings.RefreshToken = _identity.RefreshToken;
-                        Settings.AccessToken = _identity.AccessToken;
-						break;
+		//AppServiceIdentity _identity;
+		//async Task SetIdentityValues(MobileServiceUser user)
+		//{
+		//	//Manually calling /.auth/me against remote server because InvokeApiAsync against a local instance of Azure will never hit the remote endpoint
+		//	//If you are not debugging your service locally, you can just use InvokeApiAsync("/.auth/me") 
+		//	if(_identity == null)
+		//	{
+		//		using(var client = new HttpClient())
+		//		{
+		//			client.DefaultRequestHeaders.Add("ZUMO-API-VERSION", "2.0.0");
+		//			client.DefaultRequestHeaders.Add("X-ZUMO-AUTH", AzureService.Instance.Client.CurrentUser.MobileServiceAuthenticationToken);
+		//			var json = await client.GetStringAsync($"{Keys.AzureDomainRemote}/.auth/me");
+		//			_identity = JsonConvert.DeserializeObject<List<AppServiceIdentity>>(json).FirstOrDefault();
+		//		}
+		//	}
+
+		//	if(_identity != null)
+		//	{
+		//		Settings.AzureAuthToken = user.MobileServiceAuthenticationToken;
+		//		Settings.AzureUserId = user.UserId;
+
+		//		switch(Keys.AuthenticationProvider)
+		//		{
+		//			case MobileServiceAuthenticationProvider.Google:
+		//				Settings.RefreshToken = _identity.RefreshToken;
+  //                      Settings.AccessToken = _identity.AccessToken;
+		//				break;
 						
-					case MobileServiceAuthenticationProvider.WindowsAzureActiveDirectory:
-						break;
+		//			case MobileServiceAuthenticationProvider.WindowsAzureActiveDirectory:
+		//				break;
 						
-				}
-			}
-		}
+		//		}
+		//	}
+		//}
 
 		/// <summary>
 		/// Authenticates the athlete against the Azure backend and loads all necessary data to begin the app experience
@@ -225,6 +232,7 @@ namespace Sport.Mobile.Shared
 			}
 
 			Settings.AthleteId = athlete?.Id;
+
 			App.Instance.CurrentAthlete = athlete;
 
 			if(App.Instance.CurrentAthlete != null)
@@ -291,58 +299,68 @@ namespace Sport.Mobile.Shared
 		/// </summary>
 		async public Task<bool> GetUserProfile()
 		{
+			//TODO: Hardcode user
 			if(AuthUserProfile != null)
 				return true;
 
-			AuthenticationStatus = "Getting user profile";
-			var profile = await GetUserProfile(Keys.AuthenticationProvider);
+			var rob = LocalDatabase.GetItem<Athlete> ("41d7e57c6e994ebd9e48036b38c3c3f4");
+			AuthUserProfile = new GoogleUserProfile {
+				Email = rob.Email,
+				Name = rob.Name,
+				PhotoUrl = rob.ProfileImageUrl,
+			};
+			App.Instance.CurrentAthlete = rob;
+			return true;
 
-			if(profile == null)
-			{
-				//Need to refresh the token
-				try
-				{
-					var refreshedUser = await AzureService.Instance.Client.RefreshUserAsync();
-					await SetIdentityValues(refreshedUser);
-					profile = await GetUserProfile(Keys.AuthenticationProvider);
-				}
-				catch(MobileServiceInvalidOperationException ex)
-				{
-					Debug.WriteLine("Error refreshing token: " + ex);
-					throw;
-				}
-			}
+			//AuthenticationStatus = "Getting user profile";
+			//var profile = await GetUserProfile(Keys.AuthenticationProvider);
 
-			if(profile != null)
-			{
-				AuthenticationStatus = "Authentication complete";
-				AuthUserProfile = profile;
+			//if(profile == null)
+			//{
+			//	//Need to refresh the token
+			//	try
+			//	{
+			//		var refreshedUser = await AzureService.Instance.Client.RefreshUserAsync();
+			//		await SetIdentityValues(refreshedUser);
+			//		profile = await GetUserProfile(Keys.AuthenticationProvider);
+			//	}
+			//	catch(MobileServiceInvalidOperationException ex)
+			//	{
+			//		Debug.WriteLine("Error refreshing token: " + ex);
+			//		throw;
+			//	}
+			//}
 
-				//InsightsManager.Identify(AuthUserProfile.Email, new Dictionary<string, string> {
-				//	{
-				//		"Name",
-				//		AuthUserProfile.Name
-				//	}
-				//});
+			//if(profile != null)
+			//{
+			//	AuthenticationStatus = "Authentication complete";
+			//	AuthUserProfile = profile;
 
-				Settings.ProviderUserId = AuthUserProfile.Id;
-			}
-			else
-			{
-				AuthenticationStatus = "Unable to authenticate";
-			}
+			//	//InsightsManager.Identify(AuthUserProfile.Email, new Dictionary<string, string> {
+			//	//	{
+			//	//		"Name",
+			//	//		AuthUserProfile.Name
+			//	//	}
+			//	//});
 
-			if(AuthUserProfile != null && App.Instance.CurrentAthlete == null)
-			{
-				await AuthenticateWithAzure();
-			}
+			//	Settings.ProviderUserId = AuthUserProfile.Id;
+			//}
+			//else
+			//{
+			//	AuthenticationStatus = "Unable to authenticate";
+			//}
 
-			return AuthUserProfile != null;
+			//if(AuthUserProfile != null && App.Instance.CurrentAthlete == null)
+			//{
+			//	await AuthenticateWithAzure();
+			//}
+
+			//return AuthUserProfile != null;
 		}
 
 		async public Task LogOut(bool clearCookies)
 		{
-			await AzureService.Instance.Client.LogoutAsync();
+			//await AzureService.Instance.Client.LogoutAsync();
 
 			App.Instance.CurrentAthlete = null;
 			AuthUserProfile = null;
@@ -358,57 +376,57 @@ namespace Sport.Mobile.Shared
 			}
 		}
 
-		async public Task<IUserProfile> GetUserProfile(MobileServiceAuthenticationProvider provider)
-		{
-			switch(provider)
-			{
-				case MobileServiceAuthenticationProvider.Google:
-					try
-					{
-						//Can't get profile w/out a token
-						if(Settings.AccessToken == null)
-							return null;
+		//async public Task<IUserProfile> GetUserProfile(MobileServiceAuthenticationProvider provider)
+		//{
+		//	switch(provider)
+		//	{
+		//		case MobileServiceAuthenticationProvider.Google:
+		//			try
+		//			{
+		//				//Can't get profile w/out a token
+		//				if(Settings.AccessToken == null)
+		//					return null;
 
-						using(var client = new HttpClient())
-						{
-                            const string url = "https://www.googleapis.com/oauth2/v1/userinfo?alt=json";
-							client.DefaultRequestHeaders.Add("Authorization", Settings.AccessTokenAndType);
-							var json = await client.GetStringAsync(url);
-							var profile = JsonConvert.DeserializeObject<GoogleUserProfile>(json);
-							return profile;
-						}
-					}
-					catch(Exception e)
-					{
-						Debug.WriteLine(e);
-						return null;
-					}
+		//				using(var client = new HttpClient())
+		//				{
+  //                          const string url = "https://www.googleapis.com/oauth2/v1/userinfo?alt=json";
+		//					client.DefaultRequestHeaders.Add("Authorization", Settings.AccessTokenAndType);
+		//					var json = await client.GetStringAsync(url);
+		//					var profile = JsonConvert.DeserializeObject<GoogleUserProfile>(json);
+		//					return profile;
+		//				}
+		//			}
+		//			catch(Exception e)
+		//			{
+		//				Debug.WriteLine(e);
+		//				return null;
+		//			}
 
-				case MobileServiceAuthenticationProvider.WindowsAzureActiveDirectory:
+		//		case MobileServiceAuthenticationProvider.WindowsAzureActiveDirectory:
 
-					if(_identity == null)
-						return null;
+		//			if(_identity == null)
+		//				return null;
 
-					var ad = new ActiveDirectoryUserProfile();
-					ad.Id = _identity.UserClaims.SingleOrDefault(c => c.Typ == "http://schemas.microsoft.com/identity/claims/objectidentifier")?.Val;
-					ad.Email = _identity.UserClaims.SingleOrDefault(c => c.Typ == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress")?.Val;
-					ad.Name = _identity.UserClaims.SingleOrDefault(c => c.Typ == "name")?.Val;
+		//			var ad = new ActiveDirectoryUserProfile();
+		//			ad.Id = _identity.UserClaims.SingleOrDefault(c => c.Typ == "http://schemas.microsoft.com/identity/claims/objectidentifier")?.Val;
+		//			ad.Email = _identity.UserClaims.SingleOrDefault(c => c.Typ == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress")?.Val;
+		//			ad.Name = _identity.UserClaims.SingleOrDefault(c => c.Typ == "name")?.Val;
 
-					//using(var client = new HttpClient())
-					//{
-					//	client.DefaultRequestHeaders.Add("ZUMO-API-VERSION", "2.0.0");
-					//	client.DefaultRequestHeaders.Add("Authorization", "Bearer " + AzureService.Instance.Client.CurrentUser.MobileServiceAuthenticationToken);
-					//	client.DefaultRequestHeaders.Add("X-ZUMO-AUTH", AzureService.Instance.Client.CurrentUser.MobileServiceAuthenticationToken);
-					//	var json = client.GetStringAsync("https://graph.microsoft.com/v1.0/me/").Result;
-					//	Debug.WriteLine(json);
-					//	//identity = JsonConvert.DeserializeObject<JToken>(json);
-					//}
+		//			//using(var client = new HttpClient())
+		//			//{
+		//			//	client.DefaultRequestHeaders.Add("ZUMO-API-VERSION", "2.0.0");
+		//			//	client.DefaultRequestHeaders.Add("Authorization", "Bearer " + AzureService.Instance.Client.CurrentUser.MobileServiceAuthenticationToken);
+		//			//	client.DefaultRequestHeaders.Add("X-ZUMO-AUTH", AzureService.Instance.Client.CurrentUser.MobileServiceAuthenticationToken);
+		//			//	var json = client.GetStringAsync("https://graph.microsoft.com/v1.0/me/").Result;
+		//			//	Debug.WriteLine(json);
+		//			//	//identity = JsonConvert.DeserializeObject<JToken>(json);
+		//			//}
 
-					return ad;
+		//			return ad;
 
-				default:
-					return null;
-			}
-		}
+		//		default:
+		//			return null;
+		//	}
+		//}
 	}
 }

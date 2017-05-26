@@ -33,40 +33,40 @@ namespace Sport.Mobile.Shared
 			Title = "Membership Info";
 			profileStack.Theme = App.Instance.Theming.GetThemeFromColor("gray");
 
-			btnPast.Clicked += async(sender, e) =>
-			{
-				var historyPage = new ChallengeHistoryPage(ViewModel.Membership);
-				historyPage.AddDoneButton("Done");
 
-				await Navigation.PushModalAsync(historyPage.WithinNavigationPage());
-				await Task.Delay(100);
-				await historyPage.ViewModel.GetChallengeHistory();
-			};
-
-			btnChallenge.Clicked += async(sender, e) =>
-			{
-				var conflict = ViewModel.Membership.GetChallengeConflictReason(App.Instance.CurrentAthlete);
-				if(conflict != null)
-				{
-					conflict.ToToast();
-					return;
-				}
-
-				var datePage = new ChallengeDatePage(ViewModel.Membership.Athlete, ViewModel.Membership.League);
-
-				datePage.OnChallengeSent = async(challenge) =>
-				{
-					ViewModel.NotifyPropertiesChanged();
-					await Navigation.PopModalAsync();
-					await Navigation.PopAsync();
-
-					"Challenge sent".Fmt(ViewModel.Membership.Athlete.Name).ToToast(ToastNotificationType.Success);
-				};
-
-				await Navigation.PushModalAsync(datePage.WithinNavigationPage());
-			};
 
 			ViewModel.SetPropertyChanged("CanChallenge");
+		}
+
+		public async void PastButtonClicked (object sender, EventArgs e)
+		{
+			var historyPage = new ChallengeHistoryPage (ViewModel.Membership);
+			historyPage.AddDoneButton ("Done");
+
+			await Navigation.PushModalAsync (historyPage.WithinNavigationPage ());
+			await Task.Delay (100);
+			await historyPage.ViewModel.GetChallengeHistory ();
+
+		}
+		public async void ChallengeClicked (object sender, EventArgs e)
+		{
+			var conflict = ViewModel.Membership.GetChallengeConflictReason (App.Instance.CurrentAthlete);
+			if (conflict != null) {
+				conflict.ToToast ();
+				return;
+			}
+
+			var datePage = new ChallengeDatePage (ViewModel.Membership.Athlete, ViewModel.Membership.League);
+
+			datePage.OnChallengeSent = async (challenge) => {
+				ViewModel.NotifyPropertiesChanged ();
+				await Navigation.PopModalAsync ();
+				await Navigation.PopAsync ();
+
+				"Challenge sent".Fmt (ViewModel.Membership.Athlete.Name).ToToast (ToastNotificationType.Success);
+			};
+
+			await Navigation.PushModalAsync (datePage.WithinNavigationPage ());
 		}
 
 		protected override void OnAppearing()
@@ -74,6 +74,14 @@ namespace Sport.Mobile.Shared
 			base.OnAppearing();
 			ViewModel.Membership.LocalRefresh();
 			ViewModel.NotifyPropertiesChanged();
+			btnChallenge.Clicked += ChallengeClicked;
+			btnPast.Clicked += PastButtonClicked;
+		}
+		protected override void OnDisappearing ()
+		{
+			base.OnDisappearing ();
+			btnChallenge.Clicked -= ChallengeClicked;
+			btnPast.Clicked -= PastButtonClicked;
 		}
 
 		protected override void TrackPage(Dictionary<string, string> metadata)

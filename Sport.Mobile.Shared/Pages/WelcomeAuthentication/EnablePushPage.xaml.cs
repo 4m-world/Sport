@@ -40,7 +40,7 @@ namespace Sport.Mobile.Shared
 			Title = "Enable Push";
 		}
 
-		async void ContinueButtonClicked(object sender, EventArgs e)
+		public async void ContinueButtonClicked(object sender, EventArgs e)
 		{
 			if(_ignoreClicks)
 				return;

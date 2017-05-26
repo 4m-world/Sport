@@ -53,7 +53,7 @@ namespace Sport.Mobile.Shared
 			using(new Busy(this))
 			{
 				var wasCompleted = Challenge.IsCompleted;
-				Challenge = await AzureService.Instance.ChallengeManager.GetItemAsync(Challenge.Id, force);
+				Challenge = AzureService.Instance.ChallengeManager.GetItem(Challenge.Id, force);
 
 				if(Challenge == null)
 					return false;

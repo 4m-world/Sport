@@ -40,9 +40,9 @@ namespace Sport.Mobile.Shared
 		{
 			using(new Busy(this))
 			{
-				var leagues = await AzureService.Instance.LeagueManager.GetItemsAsync(forceRefresh);
-				await AzureService.Instance.MembershipManager.GetItemsAsync(forceRefresh);
-				await AzureService.Instance.AthleteManager.GetItemsAsync(forceRefresh);
+				var leagues = AzureService.Instance.LeagueManager.GetItems(forceRefresh);
+				AzureService.Instance.MembershipManager.GetItems(forceRefresh);
+				AzureService.Instance.AthleteManager.GetItems(forceRefresh);
 
 				App.Instance.CurrentAthlete.LocalRefresh();
 

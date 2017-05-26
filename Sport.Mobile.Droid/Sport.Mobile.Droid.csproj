@@ -280,6 +280,12 @@
     <Reference Include="Plugin.Battery">
       <HintPath>..\packages\Xam.Plugin.Battery.2.1.1\lib\MonoAndroid10\Plugin.Battery.dll</HintPath>
     </Reference>
+    <Reference Include="CarouselView.FormsPlugin.Abstractions">
+      <HintPath>..\packages\CarouselView.FormsPlugin.4.2.7\lib\MonoAndroid\CarouselView.FormsPlugin.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="CarouselView.FormsPlugin.Android">
+      <HintPath>..\packages\CarouselView.FormsPlugin.4.2.7\lib\MonoAndroid\CarouselView.FormsPlugin.Android.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MainActivity.cs" />

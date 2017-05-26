@@ -17,6 +17,7 @@ using Sport.Mobile.Shared.Services;
 using System.Reflection;
 using System.IO;
 using System.Linq;
+using CarouselView.FormsPlugin.Android;
 
 namespace Sport.Mobile.Droid
 {
@@ -78,6 +79,8 @@ namespace Sport.Mobile.Droid
 
                 CurrentPlatform.Init();
                 Xamarin.Forms.Forms.Init(this, bundle);
+
+				CarouselViewRenderer.Init ();
                 NControls.Init();
                 ImageCircleRenderer.Init();
 

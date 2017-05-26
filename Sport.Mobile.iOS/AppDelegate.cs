@@ -12,6 +12,7 @@ using System.IO;
 using Sport.Mobile.Shared.Services;
 using System.Reflection;
 using System.Linq;
+using CarouselView.FormsPlugin.iOS;
 
 namespace Sport.Mobile.iOS
 {
@@ -44,6 +45,7 @@ namespace Sport.Mobile.iOS
 			CurrentPlatform.Init();
 			SQLitePCL.CurrentPlatform.Init();
 			Forms.Init();
+			CarouselViewRenderer.Init ();
 			ImageCircleRenderer.Init();
 			XFGloss.iOS.Library.Init();
 

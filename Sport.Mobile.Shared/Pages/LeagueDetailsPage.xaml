@@ -2,7 +2,7 @@
 <local:LeagueDetailsXaml xmlns="http://xamarin.com/schemas/2014/forms"
 	xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
 	xmlns:local="clr-namespace:Sport.Mobile.Shared"
-	xmlns:cv="clr-namespace:Xamarin.Forms;assembly=Xamarin.Forms.CarouselView"
+    xmlns:cv="clr-namespace:CarouselView.FormsPlugin.Abstractions;assembly=CarouselView.FormsPlugin.Abstractions"
 	BackgroundColor="{StaticResource grayUltraLight}"
 	x:Class="Sport.Mobile.Shared.LeagueDetailsPage"
 	x:Name="rootPage">
@@ -88,9 +88,9 @@
 						<local:RankStripView x:Name="rankStrip" Margin="0,10" />
 					</ContentView>
 
-					<cv:CarouselView ItemsSource="{Binding OngoingChallengeViewModels}" x:Name="challengeCarousel" HeightRequest="182"
+					<cv:CarouselViewControl ItemsSource="{Binding OngoingChallengeViewModels}" x:Name="challengeCarousel" HeightRequest="182"
 						IsVisible="{Binding OngoingChallengeViewModels, Converter={x:Static local:IsEmptyConverter.Instance}}}">
-						<cv:CarouselView.ItemTemplate>
+						<cv:CarouselViewControl.ItemTemplate>
 							<DataTemplate>
 								<local:ChallengeCardView ViewModel="{Binding .}" Margin="3,0"
 										OnAccepted="{Binding Source={x:Reference rootPage}, Path=AcceptedCommand}"
@@ -100,8 +100,8 @@
 										OnClicked="{Binding Source={x:Reference rootPage}, Path=ClickedCommand}"
 								/>
 							</DataTemplate>
-						</cv:CarouselView.ItemTemplate>
-					  </cv:CarouselView>
+						</cv:CarouselViewControl.ItemTemplate>
+					  </cv:CarouselViewControl>
 				</StackLayout>
 			</StackLayout>
 

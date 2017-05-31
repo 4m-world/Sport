@@ -18,6 +18,8 @@ using System.Reflection;
 using System.IO;
 using System.Linq;
 using CarouselView.FormsPlugin.Android;
+using Android.Util;
+using Sport.Mobile.Droid.Renderers;
 
 namespace Sport.Mobile.Droid
 {
@@ -36,7 +38,9 @@ namespace Sport.Mobile.Droid
 
         protected override void OnCreate(Bundle bundle)
         {
-
+			var metrics = new DisplayMetrics ();
+			WindowManager.DefaultDisplay.GetMetrics (metrics);
+			ImageLoader.ScreenWidth = metrics.WidthPixels;
 			LocalDatabase.RootPath = DocumentsDir;
 			var dbPAth = LocalDatabase.DatabasePath;
 			if (!File.Exists (dbPAth)) {

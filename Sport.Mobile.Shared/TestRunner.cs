@@ -18,7 +18,7 @@ namespace Sport.Mobile.Shared
 
 		public double CrashPercent { get; set; } = .12;
 
-		public int Intro { get; set; } = 0;
+		public int Intro { get; set; } = 1;
 		//
 		//		public bool HasStarted { get; set; }
 

@@ -4,6 +4,7 @@ using System.Threading;
 using System.Diagnostics;
 using Xamarin.Forms;
 using System.Linq;
+using System.Collections.Generic;
 namespace Sport.Mobile.Shared
 {
 	public class TestOptions
@@ -132,9 +133,13 @@ namespace Sport.Mobile.Shared
 				else
 					OnFail ();
 
-			} catch (Exception ex) {
+			} catch (TaskCanceledException ex) {
+
+			}
+			catch (Exception ex) {
 				//Debug.WriteLine (ex);
 				Debug.WriteLine ($"Cancled: {testRunId}");
+				Microsoft.Azure.Mobile.Analytics.Analytics.TrackEvent ("Exception", new Dictionary<string, string> {{ "Error", ex.Message } });
 			} finally {
 				secondToken.Cancel ();
 				Debug.WriteLine ($"Completed: {testRunId}");

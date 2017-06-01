@@ -4,6 +4,7 @@
 	xmlns:local="clr-namespace:Sport.Mobile.Shared"
     xmlns:cv="clr-namespace:CarouselView.FormsPlugin.Abstractions;assembly=CarouselView.FormsPlugin.Abstractions"
 	BackgroundColor="{StaticResource grayUltraLight}"
+    xmlns:native="clr-namespace:Xamarin.Forms;assembly=Sport.Mobile.Shared"
 	x:Class="Sport.Mobile.Shared.LeagueDetailsPage"
 	x:Name="rootPage">
 
@@ -24,7 +25,7 @@
 			<ContentView Padding="0,0,0,0">
 				<Grid>
 					<Image Source="ic_missing_photo_white" AutomationId="leaguePhoto" HorizontalOptions="Center" VerticalOptions="Center" />
-					<Image x:Name="photoImage" Source="{Binding League.ImageUrl}" HorizontalOptions="Fill" HeightRequest="200"
+					<native:NativeWebImageView x:Name="photoImage" Source="{Binding League.ImageUrl}" HorizontalOptions="Fill" HeightRequest="200"
 						VerticalOptions="Center" Aspect="AspectFill" Opacity=".8" />
 
 					<StackLayout IsVisible="{Binding IsFirstPlace}" Orientation="Horizontal" VerticalOptions="End">

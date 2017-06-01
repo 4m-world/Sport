@@ -286,6 +286,9 @@
     <Reference Include="CarouselView.FormsPlugin.Android">
       <HintPath>..\packages\CarouselView.FormsPlugin.4.2.7\lib\MonoAndroid\CarouselView.FormsPlugin.Android.dll</HintPath>
     </Reference>
+    <Reference Include="Xamarin.Android.Glide">
+      <HintPath>..\packages\Xamarin.Android.Glide.3.8.0\lib\MonoAndroid70\Xamarin.Android.Glide.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MainActivity.cs" />
@@ -299,6 +302,7 @@
     <Compile Include="Renderers\SportEntryRenderer.cs" />
     <Compile Include="LaunchActivity.cs" />
     <Compile Include="Renderers\ImageLoader.cs" />
+    <Compile Include="Renderers\NativeWebImageViewRenderer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

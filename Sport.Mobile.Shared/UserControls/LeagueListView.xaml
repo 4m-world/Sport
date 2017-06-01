@@ -8,6 +8,7 @@
 	BackgroundColor="{StaticResource grayLight}"
 	SeparatorVisibility="None"
 	HasUnevenRows="true"
+    xmlns:native="clr-namespace:Xamarin.Forms;assembly=Sport.Mobile.Shared"
 	xmlns:local="clr-namespace:Sport.Mobile.Shared">
 	<ListView.ItemTemplate>
 		<DataTemplate>
@@ -29,7 +30,7 @@
 								<AbsoluteLayout HeightRequest="150">
 									<Image Source="ic_missing_photo_white" AbsoluteLayout.LayoutFlags="PositionProportional" AbsoluteLayout.LayoutBounds=".5,.5,-1,-1"
 										HeightRequest="24" WidthRequest="24" />
-									<Image x:Name="photoImage" Source="{Binding League.ImageUrl}" Aspect="AspectFill"
+									<native:NativeWebImageView x:Name="photoImage" Source="{Binding League.ImageUrl}" Aspect="AspectFill"
 										AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="0,0,1,1" Opacity=".8" />
 
 									<local:RoundedRectangleView IsVisible="{Binding IsFirstPlace}" Padding="10" CornerRadius="10"

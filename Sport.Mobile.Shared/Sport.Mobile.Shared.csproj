@@ -243,6 +243,7 @@
     <Compile Include="Pages\BlankPage.xaml.cs">
       <DependentUpon>BlankPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UserControls\NativeWebImageView.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="ModernHttpClient">

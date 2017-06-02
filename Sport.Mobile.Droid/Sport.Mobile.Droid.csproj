@@ -376,10 +376,10 @@
     <AndroidResource Include="Resources\drawable\no_pic.png" />
     <AndroidResource Include="Resources\drawable-hdpi\Check.png" />
     <AndroidResource Include="Resources\drawable-hdpi\Crash.png" />
-    <AndroidResource Include="Resources\drawable\15998931704_3a5c433676_b.jpg" />
-    <AndroidResource Include="Resources\drawable\6322943071_a7c86492ba_b.jpg" />
-    <AndroidResource Include="Resources\drawable\14307225316_24c814660a_k.jpg" />
-    <AndroidResource Include="Resources\drawable\24814543375_58e16dbfa3_b.jpg" />
+    <AndroidResource Include="Resources\drawable\p15998931704_3a5c433676_b.jpg" />
+    <AndroidResource Include="Resources\drawable\p6322943071_a7c86492ba_b.jpg" />
+    <AndroidResource Include="Resources\drawable\p14307225316_24c814660a_k.jpg" />
+    <AndroidResource Include="Resources\drawable\p24814543375_58e16dbfa3_b.jpg" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Sport.Mobile.Shared\Sport.Mobile.Shared.csproj">

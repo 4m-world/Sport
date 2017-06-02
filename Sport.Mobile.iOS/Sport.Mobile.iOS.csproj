@@ -327,10 +327,10 @@
     <BundleResource Include="Resources\no_pic.png" />
     <BundleResource Include="Resources\Check.png" />
     <BundleResource Include="Resources\Crash.png" />
-    <BundleResource Include="Resources\24814543375_58e16dbfa3_b.jpg" />
-    <BundleResource Include="Resources\14307225316_24c814660a_k.jpg" />
-    <BundleResource Include="Resources\6322943071_a7c86492ba_b.jpg" />
-    <BundleResource Include="Resources\15998931704_3a5c433676_b.jpg" />
+    <BundleResource Include="Resources\p24814543375_58e16dbfa3_b.jpg" />
+    <BundleResource Include="Resources\p14307225316_24c814660a_k.jpg" />
+    <BundleResource Include="Resources\p6322943071_a7c86492ba_b.jpg" />
+    <BundleResource Include="Resources\p15998931704_3a5c433676_b.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <Import Project="..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets" Condition="Exists('..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" />

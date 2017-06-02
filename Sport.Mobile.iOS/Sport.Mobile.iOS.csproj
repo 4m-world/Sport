@@ -133,12 +133,6 @@
     <Reference Include="Plugin.Connectivity">
       <HintPath>..\packages\Xam.Plugin.Connectivity.2.3.0\lib\Xamarin.iOS10\Plugin.Connectivity.dll</HintPath>
     </Reference>
-    <Reference Include="ImageCircle.Forms.Plugin.Abstractions">
-      <HintPath>..\packages\Xam.Plugins.Forms.ImageCircle.1.8.1\lib\Xamarin.iOS10\ImageCircle.Forms.Plugin.Abstractions.dll</HintPath>
-    </Reference>
-    <Reference Include="ImageCircle.Forms.Plugin.iOS">
-      <HintPath>..\packages\Xam.Plugins.Forms.ImageCircle.1.8.1\lib\Xamarin.iOS10\ImageCircle.Forms.Plugin.iOS.dll</HintPath>
-    </Reference>
     <Reference Include="ModernHttpClient">
       <HintPath>..\packages\modernhttpclient.2.4.2\lib\Xamarin.iOS10\ModernHttpClient.dll</HintPath>
     </Reference>
@@ -278,6 +272,7 @@
     <Compile Include="Providers\ToastNotifier.cs" />
     <Compile Include="Providers\PushNotifications.cs" />
     <Compile Include="Renderers\NativeWebImageViewRenderer.cs" />
+    <Compile Include="Renderers\ImageCircleRenderer.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Sport.Mobile.Shared\Sport.Mobile.Shared.csproj">

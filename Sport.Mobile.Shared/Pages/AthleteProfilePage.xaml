@@ -4,7 +4,7 @@
 	xmlns:xfg="clr-namespace:XFGloss;assembly=XFGloss"
 	x:Class="Sport.Mobile.Shared.AthleteProfilePage"
 	xmlns:local="clr-namespace:Sport.Mobile.Shared"
-	xmlns:controls="clr-namespace:ImageCircle.Forms.Plugin.Abstractions;assembly=ImageCircle.Forms.Plugin.Abstractions">
+	xmlns:controls="clr-namespace:ImageCircle.Forms.Plugin.Abstractions;assembly=Sport.Mobile.Shared">
     <local:AthleteProfilePageXaml.Resources>
 		<ResourceDictionary>
 			<Style TargetType="Label" BasedOn="{StaticResource whiteLabelStyle}" />

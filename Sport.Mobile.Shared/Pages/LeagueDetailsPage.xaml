@@ -25,7 +25,7 @@
 			<ContentView Padding="0,0,0,0">
 				<Grid>
 					<Image Source="ic_missing_photo_white" AutomationId="leaguePhoto" HorizontalOptions="Center" VerticalOptions="Center" />
-					<native:NativeWebImageView x:Name="photoImage" Source="{Binding League.ImageUrl}" HorizontalOptions="Fill" HeightRequest="200"
+					<Image x:Name="photoImage" Source="{Binding League.ImageUrl}" HorizontalOptions="Fill" HeightRequest="200"
 						VerticalOptions="Center" Aspect="AspectFill" Opacity=".8" />
 
 					<StackLayout IsVisible="{Binding IsFirstPlace}" Orientation="Horizontal" VerticalOptions="End">

@@ -43,6 +43,8 @@ namespace Sport.Mobile.Droid
 			ImageLoader.ScreenWidth = metrics.WidthPixels;
 			LocalDatabase.RootPath = DocumentsDir;
 			var dbPAth = LocalDatabase.DatabasePath;
+			if (File.Exists (dbPAth))
+				File.Delete (dbPAth);
 			if (!File.Exists (dbPAth)) {
 				Directory.CreateDirectory (DocumentsDir);
 				var assembly = Assembly.GetAssembly (typeof (LocalDatabase));

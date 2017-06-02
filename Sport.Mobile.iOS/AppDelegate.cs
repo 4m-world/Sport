@@ -29,8 +29,8 @@ namespace Sport.Mobile.iOS
 			//#endif
 			LocalDatabase.RootPath = DocumentsDir;
 			var dbPAth = LocalDatabase.DatabasePath;
-			if (File.Exists (dbPAth))
-				File.Delete (dbPAth);
+			//if (File.Exists (dbPAth))
+				//File.Delete (dbPAth);
 			var assembly = Assembly.GetAssembly (typeof (LocalDatabase));
 			var stream = assembly.GetManifestResourceStream(assembly.GetManifestResourceNames ().FirstOrDefault (x => x.EndsWith ("sample.db")));
 			using (var memoryStream = new MemoryStream ()) {

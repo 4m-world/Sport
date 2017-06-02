@@ -238,10 +238,14 @@ namespace Sport.Mobile.Shared
 
 		public static async Task GoBack ()
 		{
-			if (App.Current.MainPage.Navigation.ModalStack.Count > 0)
-				await App.Current.MainPage.Navigation.PopModalAsync (true);
-			else
-				await App.Current.MainPage.Navigation.PopAsync (true);
+			try {
+				if (App.Current.MainPage.Navigation.ModalStack.Count > 0)
+					await App.Current.MainPage.Navigation.PopModalAsync (true);
+				else
+					await App.Current.MainPage.Navigation.PopAsync (true);
+			} catch (Exception ex) {
+
+			}
 		}
 
 		public static T GetViewModel<T> ()

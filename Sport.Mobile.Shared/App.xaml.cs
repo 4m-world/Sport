@@ -119,10 +119,14 @@ namespace Sport.Mobile.Shared
 
 		async Task dismissAll ()
 		{
-			var hasModal = MainPage?.Navigation?.ModalStack?.Count > 0;
-			while (hasModal) {
-				await MainPage.Navigation.PopModalAsync (false);
-				hasModal = MainPage?.Navigation?.ModalStack?.Count > 0;
+			try {
+				var hasModal = MainPage?.Navigation?.ModalStack?.Count > 0;
+				while (hasModal) {
+					await MainPage.Navigation.PopModalAsync (false);
+					hasModal = MainPage?.Navigation?.ModalStack?.Count > 0;
+				}
+			} catch (Exception ex) {
+
 			}
 				
 		}

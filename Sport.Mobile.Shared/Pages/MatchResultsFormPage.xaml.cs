@@ -65,8 +65,11 @@ namespace Sport.Mobile.Shared
 
 				if (!success)
 					return;
+				try {
+					await Navigation.PopModalAsync ();
+				} catch (Exception ex) {
 
-				await Navigation.PopModalAsync ();
+				}
 
 				if (OnMatchResultsPosted != null)
 					OnMatchResultsPosted ();

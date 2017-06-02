@@ -210,7 +210,11 @@ namespace Sport.Mobile.Shared
 
 		public async void Done (object sender, EventArgs e)
 		{
-			await Navigation.PopModalAsync ();
+			try {
+				await Navigation.PopModalAsync ();
+			} catch (Exception ex) {
+
+			}
 		}
 
 		protected virtual void TrackPage(Dictionary<string, string> metadata)
@@ -262,7 +266,11 @@ namespace Sport.Mobile.Shared
 
 			if(success && Navigation.ModalStack.Count > 0)
 			{
-				await Navigation.PopModalAsync();
+				try {
+					await Navigation.PopModalAsync ();
+				} catch (Exception ex) {
+
+				}
 				return true;
 			}
 

@@ -71,7 +71,11 @@ namespace Sport.Mobile.Shared
 		}
 		public async void Canceled (object sender, EventArgs e)
 		{
-			await Navigation.PopModalAsync ();
+			try {
+				await Navigation.PopModalAsync ();
+			} catch (Exception ex) {
+
+			}
 		}
 
 		protected override void OnAppearing ()

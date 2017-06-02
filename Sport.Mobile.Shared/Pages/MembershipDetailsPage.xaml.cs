@@ -60,9 +60,12 @@ namespace Sport.Mobile.Shared
 
 			datePage.OnChallengeSent = async (challenge) => {
 				ViewModel.NotifyPropertiesChanged ();
-				await Navigation.PopModalAsync ();
-				await Navigation.PopAsync ();
+				try {
+					await Navigation.PopModalAsync ();
+					await Navigation.PopAsync ();
+				} catch (Exception ex) {
 
+				}
 				"Challenge sent".Fmt (ViewModel.Membership.Athlete.Name).ToToast (ToastNotificationType.Success);
 			};
 
